@@ -38,7 +38,7 @@ func (repo *ConsignmentRepository) GetAll() ([]*pb.Consignment, error) {
 
 // Close closes the database session after each query has ran.
 // Mgo creates a 'master' session on start-up, it's then good practice
-// to copy a new session for each request that's made. This means that
+// to clone a new session for each request that's made. This means that
 // each request has its own database session. This is safer and more efficient,
 // as under the hood each session has its own database socket and error handling.
 // Using one main database socket means requests having to wait for that session.

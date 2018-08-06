@@ -5,28 +5,24 @@ import (
 	"os"
 
 	pb "github.com/hackerrithm/pixel/user-service/proto/user"
-	micro "github.com/micro/go-micro"
 	microclient "github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/cmd"
 	"golang.org/x/net/context"
 )
 
 func main() {
 
-	srv := micro.NewService(
+	cmd.Init()
 
-		micro.Name("go.micro.srv.user-cli"),
-		micro.Version("latest"),
-	)
-
-	// Init will parse the command line flags.
-	srv.Init()
-
+	// Create new greeter client
 	client := pb.NewUserServiceClient("go.micro.srv.user", microclient.DefaultClient)
 
 	name := "Ewan Valentine"
 	email := "ewan.valentine89@gmail.com"
 	password := "test123"
 	company := "BBC"
+
+	log.Println(name, email, password)
 
 	r, err := client.Create(context.TODO(), &pb.User{
 		Name:     name,
