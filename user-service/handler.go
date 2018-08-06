@@ -6,13 +6,17 @@ import (
 	"log"
 
 	pb "github.com/hackerrithm/pixel/user-service/proto/user"
+	micro "github.com/micro/go-micro"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
 
+const topic = "user.created"
+
 type service struct {
 	repo         Repository
 	tokenService Authable
+	Publisher    micro.Publisher
 }
 
 func (srv *service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
@@ -29,7 +33,6 @@ func (srv *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Respons
 	if err != nil {
 		return err
 	}
-	log.Println(users)
 	res.Users = users
 	return nil
 }
@@ -68,6 +71,9 @@ func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 		return err
 	}
 	res.User = req
+	if err := srv.Publisher.Publish(ctx, req); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -75,11 +81,10 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 
 	// Decode token
 	claims, err := srv.tokenService.Decode(req.Token)
+
 	if err != nil {
 		return err
 	}
-
-	log.Println(claims)
 
 	if claims.User.Id == "" {
 		return errors.New("invalid user")
