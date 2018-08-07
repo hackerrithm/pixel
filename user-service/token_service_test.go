@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	pb "github.com/hackerrithm/pixel/user-service/proto/user"
+	pb "github.com/hackerrithm/pixel/user-service/proto/auth"
 )
 
 var (
