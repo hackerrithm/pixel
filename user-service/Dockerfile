@@ -14,6 +14,6 @@ RUN apk --no-cache add ca-certificates
 
 RUN mkdir /app
 WORKDIR /app
-COPY --from=builder /go/src/github.com/hackerrithm/pixel/user-service .
+COPY --from=builder /go/src/github.com/hackerrithm/pixel/user-service/user-service .
 
 CMD ["./user-service"]
