@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	pb "github.com/hackerrithm/pixel/user-service/proto/user"
+	pb "github.com/hackerrithm/pixel/user-service/proto/auth"
 	microclient "github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
 	"golang.org/x/net/context"

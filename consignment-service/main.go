@@ -11,7 +11,7 @@ import (
 	"os"
 
 	pb "github.com/hackerrithm/pixel/consignment-service/proto/consignment"
-	userService "github.com/hackerrithm/pixel/user-service/proto/user"
+	userService "github.com/hackerrithm/pixel/user-service/proto/auth"
 	vesselProto "github.com/hackerrithm/pixel/vessel-service/proto/vessel"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/client"

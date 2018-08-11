@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	pb "github.com/hackerrithm/pixel/user-service/proto/user"
+	pb "github.com/hackerrithm/pixel/user-service/proto/auth"
 	micro "github.com/micro/go-micro"
 )
 
