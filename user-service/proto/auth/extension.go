@@ -5,6 +5,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// BeforeCreate TODO
 func (model *User) BeforeCreate(scope *gorm.Scope) error {
 	u, err := uuid.NewV4()
 	if err != nil {
