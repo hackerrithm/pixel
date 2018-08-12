@@ -14,7 +14,7 @@ func main() {
 	// Creates a database connection and handles
 	// closing it again before exit.
 	db, err := CreateConnection()
-	defer db.Close()
+	//defer db.Close()
 
 	if err != nil {
 		log.Fatalf("Could not connect to DB: %v", err)
