@@ -2,7 +2,7 @@ package grpc
 
 import (
 	"context"
-	"errors"
+
 	grpc "github.com/go-kit/kit/transport/grpc"
 	endpoint "github.com/hackerrithm/pixel/notificator/pkg/endpoint"
 	pb "github.com/hackerrithm/pixel/notificator/pkg/grpc/pb"
@@ -16,16 +16,17 @@ func makeSendEmailHandler(endpoints endpoint.Endpoints, options []grpc.ServerOpt
 
 // decodeSendEmailResponse is a transport/grpc.DecodeRequestFunc that converts a
 // gRPC request to a user-domain sum request.
-// TODO implement the decoder
 func decodeSendEmailRequest(_ context.Context, r interface{}) (interface{}, error) {
-	return nil, errors.New("'Notificator' Decoder is not impelemented")
+	req := r.(*pb.SendEmailRequest)
+	return endpoint.SendEmailRequest{Email: req.Email, Content: req.Content}, nil
 }
 
 // encodeSendEmailResponse is a transport/grpc.EncodeResponseFunc that converts
 // a user-domain response to a gRPC reply.
 // TODO implement the encoder
 func encodeSendEmailResponse(_ context.Context, r interface{}) (interface{}, error) {
-	return nil, errors.New("'Notificator' Encoder is not impelemented")
+	reply := r.(endpoint.SendEmailResponse)
+	return &pb.SendEmailReply{Id: reply.ID}, nil
 }
 func (g *grpcServer) SendEmail(ctx context1.Context, req *pb.SendEmailRequest) (*pb.SendEmailReply, error) {
 	_, rep, err := g.sendEmail.ServeGRPC(ctx, req)

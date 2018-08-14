@@ -1,30 +1,26 @@
 package service
 
 import (
-	"context"
-	"flag"
-	"fmt"
-	"net"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
+	flag "flag"
+	fmt "fmt"
+	net "net"
+	http1 "net/http"
+	os "os"
+	signal "os/signal"
+	syscall "syscall"
 
 	endpoint1 "github.com/go-kit/kit/endpoint"
 	log "github.com/go-kit/kit/log"
 	prometheus "github.com/go-kit/kit/metrics/prometheus"
-	sdetcd "github.com/go-kit/kit/sd/etcd"
-	endpoint "github.com/hackerrithm/pixel/notificator/pkg/endpoint"
-	grpc "github.com/hackerrithm/pixel/notificator/pkg/grpc"
-	pb "github.com/hackerrithm/pixel/notificator/pkg/grpc/pb"
-	service "github.com/hackerrithm/pixel/notificator/pkg/service"
+	endpoint "github.com/hackerrithm/pixel/todo/pkg/endpoint"
+	http "github.com/hackerrithm/pixel/todo/pkg/http"
+	service "github.com/hackerrithm/pixel/todo/pkg/service"
 	lightsteptracergo "github.com/lightstep/lightstep-tracer-go"
 	group "github.com/oklog/oklog/pkg/group"
 	opentracinggo "github.com/opentracing/opentracing-go"
 	zipkingoopentracing "github.com/openzipkin/zipkin-go-opentracing"
 	prometheus1 "github.com/prometheus/client_golang/prometheus"
 	promhttp "github.com/prometheus/client_golang/prometheus/promhttp"
-	grpc1 "google.golang.org/grpc"
 	appdash "sourcegraph.com/sourcegraph/appdash"
 	opentracing "sourcegraph.com/sourcegraph/appdash/opentracing"
 )
@@ -34,7 +30,7 @@ var logger log.Logger
 
 // Define our flags. Your service probably won't need to bind listeners for
 // all* supported transports, but we do it here for demonstration purposes.
-var fs = flag.NewFlagSet("notificator", flag.ExitOnError)
+var fs = flag.NewFlagSet("todo", flag.ExitOnError)
 var debugAddr = fs.String("debug.addr", ":8080", "Debug and metrics listen address")
 var httpAddr = fs.String("http-addr", ":8081", "HTTP listen address")
 var grpcAddr = fs.String("grpc-addr", ":8082", "gRPC listen address")
@@ -64,7 +60,7 @@ func Run() {
 			os.Exit(1)
 		}
 		defer collector.Close()
-		recorder := zipkingoopentracing.NewRecorder(collector, false, "localhost:80", "notificator")
+		recorder := zipkingoopentracing.NewRecorder(collector, false, "localhost:80", "todo")
 		tracer, err = zipkingoopentracing.NewTracer(recorder)
 		if err != nil {
 			logger.Log("err", err)
@@ -89,33 +85,23 @@ func Run() {
 	g := createService(eps)
 	initMetricsEndpoint(g)
 	initCancelInterrupt(g)
-	register, err := registerService(logger)
-	if err != nil {
-		logger.Log(err)
-		return
-	}
-
-	defer register.Deregister()
-
 	logger.Log("exit", g.Run())
 
 }
-func initGRPCHandler(endpoints endpoint.Endpoints, g *group.Group) {
-	options := defaultGRPCOptions(logger, tracer)
-	// Add your GRPC options here
+func initHttpHandler(endpoints endpoint.Endpoints, g *group.Group) {
+	options := defaultHttpOptions(logger, tracer)
+	// Add your http options here
 
-	grpcServer := grpc.NewGRPCServer(endpoints, options)
-	grpcListener, err := net.Listen("tcp", *grpcAddr)
+	httpHandler := http.NewHTTPHandler(endpoints, options)
+	httpListener, err := net.Listen("tcp", *httpAddr)
 	if err != nil {
-		logger.Log("transport", "gRPC", "during", "Listen", "err", err)
+		logger.Log("transport", "HTTP", "during", "Listen", "err", err)
 	}
 	g.Add(func() error {
-		logger.Log("transport", "gRPC", "addr", *grpcAddr)
-		baseServer := grpc1.NewServer()
-		pb.RegisterNotificatorServer(baseServer, grpcServer)
-		return baseServer.Serve(grpcListener)
+		logger.Log("transport", "HTTP", "addr", *httpAddr)
+		return http1.Serve(httpListener, httpHandler)
 	}, func(error) {
-		grpcListener.Close()
+		httpListener.Close()
 	})
 
 }
@@ -132,7 +118,7 @@ func getEndpointMiddleware(logger log.Logger) (mw map[string][]endpoint1.Middlew
 		Help:      "Request duration in seconds.",
 		Name:      "request_duration_seconds",
 		Namespace: "example",
-		Subsystem: "notificator",
+		Subsystem: "todo",
 	}, []string{"method", "success"})
 	addDefaultEndpointMiddleware(logger, duration, mw)
 	// Add you endpoint middleware here
@@ -140,14 +126,14 @@ func getEndpointMiddleware(logger log.Logger) (mw map[string][]endpoint1.Middlew
 	return
 }
 func initMetricsEndpoint(g *group.Group) {
-	http.DefaultServeMux.Handle("/metrics", promhttp.Handler())
+	http1.DefaultServeMux.Handle("/metrics", promhttp.Handler())
 	debugListener, err := net.Listen("tcp", *debugAddr)
 	if err != nil {
 		logger.Log("transport", "debug/HTTP", "during", "Listen", "err", err)
 	}
 	g.Add(func() error {
 		logger.Log("transport", "debug/HTTP", "addr", *debugAddr)
-		return http.Serve(debugListener, http.DefaultServeMux)
+		return http1.Serve(debugListener, http1.DefaultServeMux)
 	}, func(error) {
 		debugListener.Close()
 	})
@@ -166,29 +152,4 @@ func initCancelInterrupt(g *group.Group) {
 	}, func(error) {
 		close(cancelInterrupt)
 	})
-}
-
-func registerService(logger log.Logger) (*sdetcd.Registrar, error) {
-	var (
-		etcdServer = "http://etcd:2379"
-		prefix     = "/services/notificator/"
-		instance   = "notificator:8082"
-		key        = prefix + instance
-	)
-
-	client, err := sdetcd.NewClient(context.Background(), []string{etcdServer}, sdetcd.ClientOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	registrar := sdetcd.NewRegistrar(client, sdetcd.Service{
-		Key:   key,
-		Value: instance,
-	}, logger)
-
-	registrar.Register()
-
-	logger.Log("notificator registered in etcd")
-
-	return registrar, nil
 }

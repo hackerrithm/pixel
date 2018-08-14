@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"context"
+
 	endpoint "github.com/go-kit/kit/endpoint"
 	service "github.com/hackerrithm/pixel/notificator/pkg/service"
 )
@@ -14,15 +15,16 @@ type SendEmailRequest struct {
 
 // SendEmailResponse collects the response parameters for the SendEmail method.
 type SendEmailResponse struct {
-	E0 error `json:"e0"`
+	ID string `json:"ID"`
+	E0 error  `json:"e0"`
 }
 
 // MakeSendEmailEndpoint returns an endpoint that invokes SendEmail on the service.
 func MakeSendEmailEndpoint(s service.NotificatorService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(SendEmailRequest)
-		e0 := s.SendEmail(ctx, req.Email, req.Content)
-		return SendEmailResponse{E0: e0}, nil
+		ID, e0 := s.SendEmail(ctx, req.Email, req.Content)
+		return SendEmailResponse{ID: ID, E0: e0}, nil
 	}
 }
 

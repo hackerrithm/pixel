@@ -30,3 +30,38 @@ services:
     container_name: users
     ports:
     - 8800:8081
+  etcd:
+      image: 'quay.io/coreos/etcd:v3.1.7'
+      restart: always
+      ports:
+          - '23791:2379'
+          - '23801:2380'
+      environment:
+          ETCD_NAME: infra
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: 'http://etcd:2380'
+          ETCD_INITIAL_CLUSTER: infra=http://etcd:2380
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: secrettoken
+          ETCD_LISTEN_CLIENT_URLS: 'http://etcd:2379,http://localhost:2379'
+          ETCD_LISTEN_PEER_URLS: 'http://etcd:2380'
+          ETCD_ADVERTISE_CLIENT_URLS: 'http://etcd:2379'
+
+  todo:
+    build:
+      context: .
+      dockerfile: todo/Dockerfile
+    restart: always
+    volumes:
+    - .:/go/src/github.com/hackerrithm/pixel/examples
+    container_name: todo
+    ports:
+    - 5000:5001
+  mongodb:
+    command: mongod --smallfiles --logpath=/dev/null
+    container_name: mongodb
+    environment:
+    - MONGO_DATA_DIR=/data/db
+    - MONGO_LOG_DIR=/dev/null
+    image: mongo:latest
+    ports:
+    - 27017:27017

@@ -2,13 +2,16 @@ syntax = "proto3";
 
 package pb;
 
-
-//The Notificator service definition.
 service Notificator {
- rpc SendEmail (SendEmailRequest) returns (SendEmailReply);
+    rpc SendEmail (SendEmailRequest) returns (SendEmailReply);
 }
 
-message SendEmailRequest {}
+message SendEmailRequest {
+    string email = 1;
+    string content = 2;
+}
 
-message SendEmailReply {}
+message SendEmailReply {
+    string id = 1;
+}
 

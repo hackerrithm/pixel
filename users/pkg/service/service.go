@@ -1,6 +1,9 @@
 package service
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 // UsersService describes the service.
 type UsersService interface {
@@ -11,7 +14,7 @@ type UsersService interface {
 type basicUsersService struct{}
 
 func (b *basicUsersService) Create(ctx context.Context, email string) (e0 error) {
-	// TODO implement the business logic of Create
+	fmt.Println(email + ": this is your email address")
 	return e0
 }
 
