@@ -10,9 +10,9 @@ type NotificatorService interface {
 
 type basicNotificatorService struct{}
 
-func (b *basicNotificatorService) SendEmail(ctx context.Context, email string, content string) (string, error) {
+func (b *basicNotificatorService) SendEmail(ctx context.Context, email string, content string) (s0 string, e1 error) {
 	// TODO implement the business logic of SendEmail
-	return "", nil
+	return "", e1
 }
 
 // NewBasicNotificatorService returns a naive, stateless implementation of NotificatorService.

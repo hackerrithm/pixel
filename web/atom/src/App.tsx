@@ -11,6 +11,7 @@ import About from './components/about/about';
 import Home from './components/home/home';
 import Login from './components/login/login';
 import { default as Navigation } from './components/navigation/navigation';
+// import { default as NavigationBelow } from './components/navigation/navigation.below';
 import SignUp from './components/signup/signup';
 import Tools from './components/tools/tools';
 import withRoot from './withRoot';
@@ -50,6 +51,7 @@ export const App: React.SFC<{}> = (_props) => {
               return null;
             }}
           />
+          {/* <NavigationBelow /> */}
         </div>
       </Router>
       {/* <Root /> */}

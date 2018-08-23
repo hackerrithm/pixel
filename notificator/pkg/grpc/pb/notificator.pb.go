@@ -35,7 +35,7 @@ func (m *SendEmailRequest) Reset()         { *m = SendEmailRequest{} }
 func (m *SendEmailRequest) String() string { return proto.CompactTextString(m) }
 func (*SendEmailRequest) ProtoMessage()    {}
 func (*SendEmailRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_notificator_13dbb0e9963fb928, []int{0}
+	return fileDescriptor_notificator_26ee50c65fb2bddb, []int{0}
 }
 func (m *SendEmailRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SendEmailRequest.Unmarshal(m, b)
@@ -80,7 +80,7 @@ func (m *SendEmailReply) Reset()         { *m = SendEmailReply{} }
 func (m *SendEmailReply) String() string { return proto.CompactTextString(m) }
 func (*SendEmailReply) ProtoMessage()    {}
 func (*SendEmailReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_notificator_13dbb0e9963fb928, []int{1}
+	return fileDescriptor_notificator_26ee50c65fb2bddb, []int{1}
 }
 func (m *SendEmailReply) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SendEmailReply.Unmarshal(m, b)
@@ -184,9 +184,9 @@ var _Notificator_serviceDesc = grpc.ServiceDesc{
 	Metadata: "notificator.proto",
 }
 
-func init() { proto.RegisterFile("notificator.proto", fileDescriptor_notificator_13dbb0e9963fb928) }
+func init() { proto.RegisterFile("notificator.proto", fileDescriptor_notificator_26ee50c65fb2bddb) }
 
-var fileDescriptor_notificator_13dbb0e9963fb928 = []byte{
+var fileDescriptor_notificator_26ee50c65fb2bddb = []byte{
 	// 151 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0xcc, 0xcb, 0x2f, 0xc9,
 	0x4c, 0xcb, 0x4c, 0x4e, 0x2c, 0xc9, 0x2f, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a,

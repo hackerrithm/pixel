@@ -15,22 +15,25 @@ type SendEmailRequest struct {
 
 // SendEmailResponse collects the response parameters for the SendEmail method.
 type SendEmailResponse struct {
-	ID string `json:"ID"`
-	E0 error  `json:"e0"`
+	ID string `json:"id"`
+	E1 error  `json:"e1"`
 }
 
 // MakeSendEmailEndpoint returns an endpoint that invokes SendEmail on the service.
 func MakeSendEmailEndpoint(s service.NotificatorService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(SendEmailRequest)
-		ID, e0 := s.SendEmail(ctx, req.Email, req.Content)
-		return SendEmailResponse{ID: ID, E0: e0}, nil
+		id, s0 := s.SendEmail(ctx, req.Email, req.Content)
+		return SendEmailResponse{
+			ID: id,
+			S0: s0,
+		}, nil
 	}
 }
 
 // Failed implements Failer.
 func (r SendEmailResponse) Failed() error {
-	return r.E0
+	return r.E1
 }
 
 // Failer is an interface that should be implemented by response types.
@@ -41,7 +44,7 @@ type Failure interface {
 }
 
 // SendEmail implements Service. Primarily useful in a client.
-func (e Endpoints) SendEmail(ctx context.Context, email string, content string) (e0 error) {
+func (e Endpoints) SendEmail(ctx context.Context, email string, content string) (s0 string, e1 error) {
 	request := SendEmailRequest{
 		Content: content,
 		Email:   email,
@@ -50,5 +53,5 @@ func (e Endpoints) SendEmail(ctx context.Context, email string, content string) 
 	if err != nil {
 		return
 	}
-	return response.(SendEmailResponse).E0
+	return response.(SendEmailResponse).S0, response.(SendEmailResponse).E1
 }

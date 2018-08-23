@@ -13,7 +13,6 @@ import (
 	endpoint1 "github.com/go-kit/kit/endpoint"
 	log "github.com/go-kit/kit/log"
 	prometheus "github.com/go-kit/kit/metrics/prometheus"
-	sdetcd "github.com/go-kit/kit/sd/etcd"
 	endpoint "github.com/hackerrithm/pixel/notificator/pkg/endpoint"
 	grpc "github.com/hackerrithm/pixel/notificator/pkg/grpc"
 	pb "github.com/hackerrithm/pixel/notificator/pkg/grpc/pb"
@@ -89,14 +88,13 @@ func Run() {
 	g := createService(eps)
 	initMetricsEndpoint(g)
 	initCancelInterrupt(g)
-	register, err := registerService(logger)
+	registrar, err := registerService(logger)
 	if err != nil {
 		logger.Log(err)
 		return
 	}
 
-	defer register.Deregister()
-
+	defer registrar.Deregister()
 	logger.Log("exit", g.Run())
 
 }
@@ -187,8 +185,6 @@ func registerService(logger log.Logger) (*sdetcd.Registrar, error) {
 	}, logger)
 
 	registrar.Register()
-
 	logger.Log("notificator registered in etcd")
-
 	return registrar, nil
 }

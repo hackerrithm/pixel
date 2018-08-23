@@ -8,14 +8,14 @@ import (
 // UsersService describes the service.
 type UsersService interface {
 	// Add your methods here
-	Create(ctx context.Context, email string) error
+	Create(ctx context.Context, email string) (rs string, err error)
 }
 
 type basicUsersService struct{}
 
-func (b *basicUsersService) Create(ctx context.Context, email string) (e0 error) {
-	fmt.Println(email + ": this is your email address")
-	return e0
+func (b *basicUsersService) Create(ctx context.Context, email string) (rs string, err error) {
+	fmt.Println("hi from create method")
+	return rs, err
 }
 
 // NewBasicUsersService returns a naive, stateless implementation of UsersService.

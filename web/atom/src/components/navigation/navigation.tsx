@@ -68,7 +68,7 @@ class Navigation extends React.Component<any, any, any> {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>
-                            <NavLink style={{ textDecoration: 'none', color: 'white' }} activeClassName="active" to="/">Reacthead</NavLink>
+                            <NavLink style={{ textDecoration: 'none', color: 'white' }} activeClassName="active" to="/">Hexerent</NavLink>
                         </Typography>
                         <NavLink style={{ textDecoration: 'none', color: 'white' }} to="/tools"><Button style={{ textDecoration: 'none', color: 'white' }} color="secondary">Tools</Button></NavLink>
                         <NavLink style={{ textDecoration: 'none', color: 'white' }} to="/about"><Button color="inherit">About</Button></NavLink>

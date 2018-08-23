@@ -23,7 +23,7 @@ func LoggingMiddleware(logger log.Logger) Middleware {
 
 }
 
-func (l loggingMiddleware) SendEmail(ctx context.Context, email string, content string) (string, error) {
+func (l loggingMiddleware) SendEmail(ctx context.Context, email string, content string) (s0 string, e1 error) {
 	defer func() {
 		l.logger.Log("method", "SendEmail", "email", email, "content", content)
 	}()
