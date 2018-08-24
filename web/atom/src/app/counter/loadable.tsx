@@ -6,15 +6,15 @@ export default function loadable<P>(isLoading: (p: P) => boolean) {
   // Return a higher-order component implementing the "loadable" behavior
   // See: https://goo.gl/TxPPCw
   return (C: React.ComponentType<P>): React.SFC<P> => {
-    const LoadableComponent: React.SFC<P> = (props) => {
-      if (isLoading(props)) {
-        return <div>Just a moment, please...</div>
-      }
-      return <C {...props} />
-    }
+	const LoadableComponent: React.SFC<P> = (props) => {
+		if (isLoading(props)) {
+			return <div>Just a moment, please...</div>
+		}
+		return <C {...props} />
+	}
 
-    // Set pretty `displayName` for dev tooling
-    LoadableComponent.displayName = `Loadable(${C.name})`
-    return LoadableComponent
+	// Set pretty `displayName` for dev tooling
+	LoadableComponent.displayName = `Loadable(${C.name})`
+	return LoadableComponent
   }
 }
