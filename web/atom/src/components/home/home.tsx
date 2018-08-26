@@ -1,6 +1,7 @@
 // import classnames from "classnames";
 import * as React from "react";
-
+import { exampleDataService } from "../../app/user/exampleDataService";
+import { authenticationService } from "../../app/user/authentication";
 import {
   //Avatar,
   Button,
@@ -141,6 +142,12 @@ const styles = (theme: any) => ({
 //   }
 // ];
 
+interface WelcomeState {
+  welcomeTitle: string;
+  colors: string[];
+  badPassword: string;
+}
+
 interface IMyComponentProps {
   someDefaultValue: string;
   classes: any;
@@ -148,7 +155,7 @@ interface IMyComponentProps {
   theme: any;
 }
 
-interface IMyComponentState {
+interface IMyComponentState extends WelcomeState {
   name: string;
   open?: boolean;
   activeStep?: number;
@@ -158,15 +165,46 @@ interface IMyComponentState {
 class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
   constructor(props: IMyComponentProps) {
     super(props);
-    this.state.name = this.props.someDefaultValue;
+
+    this.state = {
+      welcomeTitle: "Bootstrap starter template",
+      colors: [],
+      badPassword: "",
+      name: this.props.someDefaultValue,
+      open: false,
+      activeStep: 0,
+      expanded: false
+    };
+
+    // this.state.name = this.props.someDefaultValue;
   }
 
-  state = {
-    name: "",
-    open: false,
-    activeStep: 0,
-    expanded: false
-  };
+  componentDidMount() {
+    exampleDataService.getColors().then(item =>
+      this.setState({
+        colors: item,
+        badPassword: this.state.badPassword
+      })
+    );
+
+    let token: string = localStorage.getItem("token") as string;
+    if (token != null) {
+      // exampleDataService.getBadPassword(token).then(item =>
+      //   this.setState({
+      //     colors: this.state.colors,
+      //     badPassword: item.result
+      //   })
+      // );
+      console.log('logged in success')
+    }
+  }
+
+  // state = {
+  //   name: "",
+  //   open: false,
+  //   activeStep: 0,
+  //   expanded: false
+  // };
 
   public handleChange(event: any): void {
     this.setState({ name: "Selena" });
@@ -210,20 +248,74 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
 
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    //const { open } = this.state;
     //const maxSteps = sliderContent.length;
 
     return (
       <div>
-        {/* Main page */}
+        {!authenticationService.isAuthenticated() &&
+          <Grid container={true} alignItems={"center"}>
+            <Grid item={true} xs={12} sm={12}>
+              <Typography variant="display3" align={"center"} color={"primary"}>
+                Hexerent
+              </Typography>
+            </Grid>
+            <Grid item={true} xs={3} sm={3} />
+            <Grid item={true} xs={6}>
+              <form className={classes.container} noValidate autoComplete="off">
+                <TextField
+                  defaultValue=""
+                  label=""
+                  placeholder="Search here"
+                  id="bootstrap-input"
+                  InputProps={{
+                    disableUnderline: true,
+                    classes: {
+                      root: classes.bootstrapRoot,
+                      input: classes.bootstrapInput
+                    }
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                    className: classes.bootstrapFormLabel
+                  }}
+                  fullWidth
+                />
+              </form>
+              <div className={classes.root}>
+                <Dialog open={false} onClose={this.handleClose}>
+                  <DialogTitle>Super Secret Password</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>1-2-3-4-5</DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button color="primary" onClick={this.handleClose}>
+                      OK
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </Grid>
+            <Grid item={true} xs={3} sm={3} />
+            <Grid item={true} xs={12} sm={4}>
+              {/* <Counter /> */}
+            </Grid>
+            <Grid item={true} xs={12} sm={4}>
+              {/* ignored */}
+            </Grid>
+            <Grid item={true} xs={12} sm={4}>
+              {/* ignored */}
+            </Grid>
+          </Grid>
+        }
+        {authenticationService.isAuthenticated() &&
         <Grid container={true} alignItems={"center"}>
           <Grid item={true} xs={12} sm={12}>
             <Typography variant="display3" align={"center"} color={"primary"}>
-              Hexerent
+              Loggen in Hexerent
             </Typography>
           </Grid>
-          <Grid item={true} xs={3} sm={3}>
-          </Grid>
+          <Grid item={true} xs={3} sm={3} />
           <Grid item={true} xs={6}>
             <form className={classes.container} noValidate autoComplete="off">
               <TextField
@@ -245,56 +337,8 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
                 fullWidth
               />
             </form>
-
-            {/* <div className={classes.bgImage}>
-            <Card className={classes.cardDiv}>
-                <CardHeader
-                  action={
-                    <IconButton>
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title="Test Menu"
-                  subheader="Date here"
-                />
-                <CardMedia
-                  className={classes.BigPanelMedia}
-                  image="/static/images/cards/paella.jpg"
-                  title="Reptile"
-                />
-                <CardContent>
-                  <Typography component="p">HI first</Typography>
-                </CardContent>
-                <CardActions className={classes.actions} disableActionSpacing>
-                  <IconButton aria-label="Add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
-                  <IconButton aria-label="Share">
-                    <ShareIcon />
-                  </IconButton>
-                  <IconButton
-                    className={classnames(classes.expand, {
-                      [classes.expandOpen]: this.state.expanded
-                    })}
-                    onClick={this.handleExpandClick}
-                    aria-expanded={this.state.expanded}
-                    aria-label="Show more"
-                  >
-                    <ExpandMoreIcon className="material-icons" />
-                  </IconButton>
-                </CardActions>
-                <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-                  <CardContent>Hi</CardContent>
-                </Collapse>
-              </Card>
-               <img
-                className={classes.bgImage}
-                src={bigImageContent[0].imgPath}
-              /> 
-            </div> */}
-            {/* {this.state.name} */}
             <div className={classes.root}>
-              <Dialog open={open} onClose={this.handleClose}>
+              <Dialog open={false} onClose={this.handleClose}>
                 <DialogTitle>Super Secret Password</DialogTitle>
                 <DialogContent>
                   <DialogContentText>1-2-3-4-5</DialogContentText>
@@ -305,17 +349,9 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
                   </Button>
                 </DialogActions>
               </Dialog>
-              {/* <Button
-                variant="contained"
-                color="secondary"
-                onClick={this.handleClick}
-              >
-                Super Secret Password
-              </Button> */}
             </div>
           </Grid>
-          <Grid item={true} xs={3} sm={3}>
-          </Grid>
+          <Grid item={true} xs={3} sm={3} />
           <Grid item={true} xs={12} sm={4}>
             {/* <Counter /> */}
           </Grid>
@@ -325,12 +361,8 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
           <Grid item={true} xs={12} sm={4}>
             {/* ignored */}
           </Grid>
-          {/* <input onChange={e => this.handleOnChange(e)} />
-          <button name="Update" onClick={e => this.handleOnClick(e)}>
-            Update
-          </button> */}
-          {/* Hello {this.state.name}! */}
         </Grid>
+        }
       </div>
     );
   }

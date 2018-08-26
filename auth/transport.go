@@ -1,14 +1,16 @@
 package auth
 
 import (
-	"github.com/gorilla/mux"
-	httptransport "github.com/go-kit/kit/transport/http"
-	"github.com/go-kit/kit/log"
 	"context"
 	"encoding/json"
-	"net/http"
 	"errors"
+	"net/http"
 	"strings"
+
+	"github.com/go-kit/kit/log"
+	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 )
 
 var ErrBadRouting = errors.New("inconsistent mapping between route and handler (programmer error)")
@@ -38,7 +40,11 @@ func MakeHttpHandler(_ context.Context, endpoint Endpoints, logger log.Logger) h
 		options...,
 	))
 
-	return r
+	q := handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
+		handlers.AllowedOrigins([]string{"*"}))(r)
+
+	return q
 
 }
 

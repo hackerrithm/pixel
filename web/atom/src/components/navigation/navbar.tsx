@@ -1,7 +1,8 @@
 import * as React from "react";
 import spacing from "@material-ui/core/styles/spacing";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { connect } from 'react-redux';
+// import { connect } from "react-redux";
+import { authenticationService } from "../../app/user/authentication";
 // import { AccountCircle } from '@material-ui/icons';
 import {
   AppBar,
@@ -38,31 +39,63 @@ const styles = (theme: any) => ({
   }
 });
 
-class Navigation extends React.Component<any, any, any> {
-  public state = {
-    open: false,
-    activeStep: 0,
-    expanded: false,
-    auth: true,
-    anchorEl: null
+interface NavigationBarState {
+  isAuthenticated: boolean;
+  open: boolean;
+  anchorEl?: HTMLElement;
+}
+
+class Navbar extends React.Component<any, NavigationBarState, any> {
+  constructor(props: {}) {
+    super(props);
+
+    this.state = {
+      isAuthenticated: authenticationService.isAuthenticated(),
+      open: false,
+      anchorEl: undefined
+    };
+
+    this.logout = this.logout.bind(this);
+  }
+  // public state = {
+  //   open: false,
+  //   activeStep: 0,
+  //   expanded: false,
+  //   auth: true,
+  //   anchorEl: null
+  // };
+
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    this.setState({ open: true, anchorEl: event.currentTarget });
   };
 
-  protected handleChange = (event: any, checked: any) => {
-    this.setState({ auth: checked });
-  };
+  // handleClose = () => {
+  //   this.setState({ open: false, anchorEl: null });
+  // };
+
+  logout() {
+    localStorage.setItem("token", "");
+    localStorage.clear();
+    this.setState({
+      isAuthenticated: false
+    });
+  }
+
+  // protected handleChange = (event: any, checked: any) => {
+  //   this.setState({ auth: checked });
+  // };
 
   protected handleMenu = (event: any) => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  protected handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
+  // protected handleClose = () => {
+  //   this.setState({ anchorEl: null });
+  // };
 
   public renderLinks() {
     const { classes } = this.props;
-    const { auth, anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+    //const open = Boolean(anchorEl);
 
     if (this.props.authenticated) {
       return (
@@ -172,13 +205,94 @@ class Navigation extends React.Component<any, any, any> {
   }
 
   render() {
-    false;
+    const { classes } = this.props;
 
     return (
       <div>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="title"
+              color="inherit"
+              className={classes.flex}
+            >
+              <NavLink
+                style={{ textDecoration: "none", color: "white" }}
+                activeClassName="active"
+                to="/"
+              >
+                Hexerent
+              </NavLink>
+            </Typography>
+            <NavLink
+              style={{ textDecoration: "none", color: "white" }}
+              to="/tools"
+            >
+              <Button
+                style={{ textDecoration: "none", color: "white" }}
+                color="secondary"
+              >
+                Tools
+              </Button>
+            </NavLink>
+            <NavLink
+              style={{ textDecoration: "none", color: "white" }}
+              to="/about"
+            >
+              <Button color="inherit">About</Button>
+            </NavLink>
+            {!this.state.isAuthenticated && (
+              <NavLink
+                style={{ textDecoration: "none", color: "white" }}
+                to="/login"
+              >
+                <Button
+                  style={{ textDecoration: "none", color: "white" }}
+                  color="primary"
+                >
+                  Login
+                </Button>
+              </NavLink>
+            )}
+            {!this.state.isAuthenticated && (
+              <NavLink
+                style={{ textDecoration: "none", color: "white" }}
+                to="/signup"
+              >
+                <Button
+                  style={{ textDecoration: "none", color: "white" }}
+                  color="secondary"
+                >
+                  Sign Up
+                </Button>
+              </NavLink>
+            )}
+            {this.state.isAuthenticated && (
+              <NavLink
+                style={{ textDecoration: "none", color: "white" }}
+                to="/"
+              >
+                <Button
+                  style={{ textDecoration: "none", color: "white" }}
+                  color="secondary"
+                  onClick={this.logout}
+                >
+                  Logout
+                </Button>
+              </NavLink>
+            )}
+          </Toolbar>
+        </AppBar>
         {/* Navbar start */}
 
-        {this.renderLinks()}
+        {/* {this.renderLinks()} */}
 
         {/* <ul>
                             <li>
@@ -237,11 +351,12 @@ class Navigation extends React.Component<any, any, any> {
   }
 }
 
+// const mapStateToProps = state => {
+//   return { authenticated: state.auth.authenticated };
+// };
 
-const mapStateToProps = (state) => {
-    return { authenticated: state.auth.authenticated }
-};
+// export default connect(mapStateToProps)(
+//   withStyles(styles, { withTheme: true })(Navbar)
+// );
 
-export default connect(mapStateToProps)( withStyles(styles, { withTheme: true })(Navigation));
-
-// export default withStyles(styles, { withTheme: true })(Navigation);
+export default withStyles(styles, { withTheme: true })(Navbar);

@@ -1,14 +1,11 @@
-import * as React from "react";
-
-// import { Link } from 'react-router-dom';
-import {
-  BottomNavigation,
-  BottomNavigationAction
-} from "@material-ui/core";
-import RestoreIcon from '@material-ui/icons/Restore';
+import * as React from 'react';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import withStyles from "@material-ui/core/styles/withStyles";
+import RestoreIcon from '@material-ui/icons/Restore';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+
+// import { Link } from 'react-router-dom';
 
 const styles = (theme: any) => ({
   root: {

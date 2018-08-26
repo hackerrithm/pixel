@@ -36,6 +36,7 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/history": "^4.6.2",
     "@types/jest": "^23.1.2",
     "@types/node": "^10.3.6",
@@ -44,6 +45,7 @@
     "@types/react-redux": "^6.0.3",
     "@types/react-router": "^4.0.18",
     "@types/react-router-dom": "^4.2.7",
+    "@types/redux-form": "^7.4.6",
     "@types/redux-logger": "^3.0.5",
     "@types/semver": "^5.5.0",
     "@types/sinon": "^5.0.1",
