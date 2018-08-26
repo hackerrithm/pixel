@@ -75,6 +75,8 @@ class Login extends React.Component<IMyComponentProps, LoginState, any> {
             authenticationService.login(this.state.username as string, this.state.password as string)
                 .then((item:any) => {
                     localStorage.setItem('token', item.token);
+                    console.log("token: " + item.token);
+                    
                     this.props.history.push('/');
                 })
                 .catch((error) => {
@@ -156,7 +158,7 @@ class Login extends React.Component<IMyComponentProps, LoginState, any> {
 
         return (
             <div className={classes.root}>
-                <form className={classes.container} noValidate autoComplete="off">
+                {/* <form className={classes.container} noValidate autoComplete="off" method="POST"> */}
                     <TextField
                         id="username"
                         label="Username"
@@ -184,7 +186,7 @@ class Login extends React.Component<IMyComponentProps, LoginState, any> {
                         Login
                         <Icon className={classes.rightIcon}>send</Icon>
                     </Button>
-                </form>
+                {/* </form> */}
             </div>
         );
     }

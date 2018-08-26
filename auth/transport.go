@@ -40,6 +40,14 @@ func MakeHttpHandler(_ context.Context, endpoint Endpoints, logger log.Logger) h
 		options...,
 	))
 
+	//GET /
+	r.Methods("GET").Path("/").Handler(httptransport.NewServer(
+		endpoint.HomeEndpoint,
+		decodeHomeRequest,
+		encodeResponse,
+		options...,
+	))
+
 	q := handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
 		handlers.AllowedOrigins([]string{"*"}))(r)
@@ -122,4 +130,9 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 // decode health check
 func decodeHealthRequest(_ context.Context, _ *http.Request) (interface{}, error) {
 	return HealthRequest{}, nil
+}
+
+// decode home check
+func decodeHomeRequest(_ context.Context, _ *http.Request) (interface{}, error) {
+	return HomeRequest{}, nil
 }

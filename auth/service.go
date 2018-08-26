@@ -1,12 +1,11 @@
 package auth
 
 import (
-	"strings"
 	"errors"
+	"strings"
 )
 
 type Service interface {
-
 	Login(username string, password string) (mesg string, roles []string, err error)
 
 	Logout() string
@@ -14,10 +13,10 @@ type Service interface {
 	// health check
 	HealthCheck() bool
 
+	Home() string
 }
 
 type AuthService struct {
-
 }
 
 // create type that return function.
@@ -45,4 +44,8 @@ func (AuthService) HealthCheck() bool {
 	//however, I did this on purpose to make the sample run easier.
 	//Ideally, it should check things such as amount of free disk space or free memory
 	return true
+}
+
+func (AuthService) Home() string {
+	return "home now"
 }

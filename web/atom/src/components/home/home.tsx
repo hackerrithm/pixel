@@ -25,6 +25,7 @@ import {
 } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import withStyles from "@material-ui/core/styles/withStyles";
+import ColorMessage from "./colorMessage";
 // import Label from "@material-ui/icons/Label";
 // import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
 // import { default as ExpandMoreIcon } from "@material-ui/icons/ExpandMore";
@@ -195,7 +196,7 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
       //     badPassword: item.result
       //   })
       // );
-      console.log('logged in success')
+      console.log("logged in success");
     }
   }
 
@@ -253,7 +254,7 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
 
     return (
       <div>
-        {!authenticationService.isAuthenticated() &&
+        {!authenticationService.isAuthenticated() && (
           <Grid container={true} alignItems={"center"}>
             <Grid item={true} xs={12} sm={12}>
               <Typography variant="display3" align={"center"} color={"primary"}>
@@ -307,62 +308,66 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
               {/* ignored */}
             </Grid>
           </Grid>
-        }
-        {authenticationService.isAuthenticated() &&
-        <Grid container={true} alignItems={"center"}>
-          <Grid item={true} xs={12} sm={12}>
-            <Typography variant="display3" align={"center"} color={"primary"}>
-              Loggen in Hexerent
-            </Typography>
+        )}
+        {authenticationService.isAuthenticated() && (
+          <Grid container={true} alignItems={"center"}>
+            <Grid item={true} xs={12} sm={12}>
+              <Typography variant="display3" align={"center"} color={"primary"}>
+                Loggen in Hexerent
+              </Typography>
+            </Grid>
+            <Grid item={true} xs={3} sm={3} />
+            <Grid item={true} xs={6}>
+              <form className={classes.container} noValidate autoComplete="off">
+                <TextField
+                  defaultValue=""
+                  label=""
+                  placeholder="Search here"
+                  id="bootstrap-input"
+                  InputProps={{
+                    disableUnderline: true,
+                    classes: {
+                      root: classes.bootstrapRoot,
+                      input: classes.bootstrapInput
+                    }
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                    className: classes.bootstrapFormLabel
+                  }}
+                  fullWidth
+                />
+              </form>
+              <div className={classes.root}>
+                <Dialog open={false} onClose={this.handleClose}>
+                  <DialogTitle>Super Secret Password</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>1-2-3-4-5</DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button color="primary" onClick={this.handleClose}>
+                      OK
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+              <h3>Did you know that fancy colors?</h3>
+              {this.state.colors.map(color => (
+                <ColorMessage name={color} key={color} />
+              ))}
+            </Grid>
+            <Grid item={true} xs={3} sm={3} />
+            <Grid item={true} xs={12} sm={4}>
+              {/* <Counter /> */}
+            </Grid>
+            <Grid item={true} xs={12} sm={4}>
+              {/* ignored */}
+            </Grid>
+            <Grid item={true} xs={12} sm={4}>
+              {/* ignored */}
+            </Grid>
           </Grid>
-          <Grid item={true} xs={3} sm={3} />
-          <Grid item={true} xs={6}>
-            <form className={classes.container} noValidate autoComplete="off">
-              <TextField
-                defaultValue=""
-                label=""
-                placeholder="Search here"
-                id="bootstrap-input"
-                InputProps={{
-                  disableUnderline: true,
-                  classes: {
-                    root: classes.bootstrapRoot,
-                    input: classes.bootstrapInput
-                  }
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                  className: classes.bootstrapFormLabel
-                }}
-                fullWidth
-              />
-            </form>
-            <div className={classes.root}>
-              <Dialog open={false} onClose={this.handleClose}>
-                <DialogTitle>Super Secret Password</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>1-2-3-4-5</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button color="primary" onClick={this.handleClose}>
-                    OK
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </div>
-          </Grid>
-          <Grid item={true} xs={3} sm={3} />
-          <Grid item={true} xs={12} sm={4}>
-            {/* <Counter /> */}
-          </Grid>
-          <Grid item={true} xs={12} sm={4}>
-            {/* ignored */}
-          </Grid>
-          <Grid item={true} xs={12} sm={4}>
-            {/* ignored */}
-          </Grid>
-        </Grid>
-        }
+        )}
       </div>
     );
   }

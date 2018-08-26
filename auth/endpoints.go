@@ -1,17 +1,17 @@
 package auth
 
 import (
-	"github.com/go-kit/kit/endpoint"
 	"context"
-	"strings"
 	"errors"
+	"strings"
+
+	"github.com/go-kit/kit/endpoint"
 	"github.com/kr/pretty"
 )
 
 var ErrRequestTypeNotFound = errors.New("Request type only valid for login and logout")
 
-type CommonReqResp struct{
-
+type CommonReqResp struct {
 	TokenString string `json:"-"`
 }
 
@@ -27,13 +27,15 @@ type AuthRequest struct {
 type AuthResponse struct {
 	CommonReqResp
 	Roles []string `json:"roles,omitempty"`
-	Mesg string `json:"mesg"`
-	Err     error `json:"err,omitempty"`
+	Mesg  string   `json:"mesg"`
+	Err   error    `json:"err,omitempty"`
 }
 
 //Health Request
 type HealthRequest struct {
+}
 
+type HomeRequest struct {
 }
 
 //Health Response
@@ -41,10 +43,15 @@ type HealthResponse struct {
 	Status bool `json:"status"`
 }
 
+type HomeResponse struct {
+	Status string `json:"status"`
+}
+
 // endpoints wrapper
 type Endpoints struct {
-	AuthEndpoint endpoint.Endpoint
+	AuthEndpoint   endpoint.Endpoint
 	HealthEndpoint endpoint.Endpoint
+	HomeEndpoint   endpoint.Endpoint
 }
 
 // creating Auth Endpoint
@@ -52,8 +59,8 @@ func MakeAuthEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		var (
 			roles []string
-			mesg string
-			err error
+			mesg  string
+			err   error
 		)
 
 		req := request.(AuthRequest)
@@ -71,7 +78,7 @@ func MakeAuthEndpoint(svc Service) endpoint.Endpoint {
 		if err != nil {
 			return nil, err
 		}
-		return AuthResponse{Mesg:mesg, Roles: roles, Err: err}, nil
+		return AuthResponse{Mesg: mesg, Roles: roles, Err: err}, nil
 	}
 }
 
@@ -79,6 +86,14 @@ func MakeAuthEndpoint(svc Service) endpoint.Endpoint {
 func MakeHealthEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		status := svc.HealthCheck()
-		return HealthResponse{Status: status }, nil
+		return HealthResponse{Status: status}, nil
+	}
+}
+
+// creating home endpoint
+func MakeHomeEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		status := svc.Home()
+		return HomeResponse{Status: status}, nil
 	}
 }
