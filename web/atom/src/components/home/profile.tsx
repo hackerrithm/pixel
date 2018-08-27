@@ -1,5 +1,6 @@
 // import classnames from "classnames";
 import * as React from "react";
+import { exampleDataService } from "../../app/user/exampleDataService";
 import { authenticationService } from "../../app/user/authentication";
 import {
   //Avatar,
@@ -141,6 +142,11 @@ const styles = (theme: any) => ({
 //   }
 // ];
 
+interface WelcomeState {
+  email: string;
+  balance: any;
+  currency: any;
+}
 
 interface IMyComponentProps {
   someDefaultValue: string;
@@ -149,18 +155,25 @@ interface IMyComponentProps {
   theme: any;
 }
 
-interface IMyComponentState {
+interface IMyComponentState extends WelcomeState {
   name: string;
   open?: boolean;
   activeStep?: number;
   expanded?: boolean;
 }
 
-class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
+class Profile extends React.Component<
+  IMyComponentProps,
+  IMyComponentState,
+  any
+> {
   constructor(props: IMyComponentProps) {
     super(props);
 
     this.state = {
+      email: "",
+      balance: "",
+      currency: "",
       name: this.props.someDefaultValue,
       open: false,
       activeStep: 0,
@@ -169,14 +182,21 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
 
   }
 
-  componentDidMount() {  }
-
-  // state = {
-  //   name: "",
-  //   open: false,
-  //   activeStep: 0,
-  //   expanded: false
-  // };
+  componentDidMount() {
+    let token: string = localStorage.getItem("token") as string;
+    if (token !== null || token !== undefined || token !== 'undefined') {
+      exampleDataService.getAccount(token).then(item =>
+        // this.setState({
+        //   email: item.email,
+        //   balance: item.result,
+        //   currency: item.currency
+        // })
+         { console.log(item); }
+        
+      );
+      console.log("logged in success");
+    }
+  }
 
   public handleChange(event: any): void {
     this.setState({ name: "Selena" });
@@ -225,11 +245,11 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
 
     return (
       <div>
-        {!authenticationService.isAuthenticated() && (
+        {authenticationService.isAuthenticated() && (
           <Grid container={true} alignItems={"center"}>
             <Grid item={true} xs={12} sm={12}>
               <Typography variant="display3" align={"center"} color={"primary"}>
-                Hexerent
+                Loggen in Hexerent
               </Typography>
             </Grid>
             <Grid item={true} xs={3} sm={3} />
@@ -267,6 +287,10 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
                   </DialogActions>
                 </Dialog>
               </div>
+              <h3>Did you know that fancy colors?</h3>
+              {() => {
+                console.log("profile match");
+              }}
             </Grid>
             <Grid item={true} xs={3} sm={3} />
             <Grid item={true} xs={12} sm={4}>
@@ -285,4 +309,4 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Home);
+export default withStyles(styles, { withTheme: true })(Profile);

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { createMuiTheme, CssBaseline, MuiThemeProvider } from '@material-ui/core';
-
 // A theme with custom primary and secondary color.
 // It's optional.
 const theme = createMuiTheme({
@@ -21,6 +20,7 @@ const theme = createMuiTheme({
     },
   },
 });
+
 
 function withRoot(Component: React.ComponentType) {
   function WithRoot(props: object) {

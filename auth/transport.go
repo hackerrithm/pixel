@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -41,7 +42,7 @@ func MakeHttpHandler(_ context.Context, endpoint Endpoints, logger log.Logger) h
 	))
 
 	//GET /
-	r.Methods("GET").Path("/").Handler(httptransport.NewServer(
+	r.Methods("GET").Path("/account").Handler(httptransport.NewServer(
 		endpoint.HomeEndpoint,
 		decodeHomeRequest,
 		encodeResponse,
@@ -100,6 +101,7 @@ func decodeAuthRequest(ctx context.Context, r *http.Request) (interface{}, error
 
 	//get token from header
 	val := r.Header.Get("Authorization")
+	fmt.Println("token from header", val)
 	authHeaderParts := strings.Split(val, " ")
 	if len(authHeaderParts) == 2 && strings.ToLower(authHeaderParts[0]) == "bearer" {
 		request.TokenString = authHeaderParts[1]

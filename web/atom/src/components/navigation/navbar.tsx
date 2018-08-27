@@ -231,6 +231,7 @@ class Navbar extends React.Component<any, NavigationBarState, any> {
                 Hexerent
               </NavLink>
             </Typography>
+            {this.state.isAuthenticated && (
             <NavLink
               style={{ textDecoration: "none", color: "white" }}
               to="/tools"
@@ -242,6 +243,7 @@ class Navbar extends React.Component<any, NavigationBarState, any> {
                 Tools
               </Button>
             </NavLink>
+            )}
             <NavLink
               style={{ textDecoration: "none", color: "white" }}
               to="/about"

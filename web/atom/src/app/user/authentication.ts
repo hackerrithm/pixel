@@ -4,13 +4,15 @@ const BASE_URL = 'http://localhost:7002';
 
 export module authenticationService {
 
-    export function login(username: string, password: string) {
+    export function login(user: any) {
+
         return axios.post(`${BASE_URL}/auth/login`, {
-            'username': username,
-            'password': password
-        }).then((result) => {
-            result.data
-            JSON.stringify(result.data, null, 4);
+            'username': user.username,
+            'password': user.password
+        }).then((result:any) => {
+            let token = result.data.token;
+
+            localStorage.setItem("token", token);
         });
     }
 
