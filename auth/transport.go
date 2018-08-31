@@ -101,9 +101,13 @@ func decodeAuthRequest(ctx context.Context, r *http.Request) (interface{}, error
 
 	//get token from header
 	val := r.Header.Get("Authorization")
+	if string(val) == "" {
+		fmt.Println("val [] empty")
+	}
 	fmt.Println("token from header", val)
 	authHeaderParts := strings.Split(val, " ")
 	if len(authHeaderParts) == 2 && strings.ToLower(authHeaderParts[0]) == "bearer" {
+		fmt.Println("spring good")
 		request.TokenString = authHeaderParts[1]
 	}
 
@@ -123,6 +127,7 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 
 	if authResp, ok := response.(AuthResponse); ok {
 		w.Header().Set("X-TOKEN-GEN", authResp.TokenString)
+		// w.Header().Set("Authorization", authResp.TokenString)
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")

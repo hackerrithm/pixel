@@ -1,6 +1,6 @@
 // import classnames from "classnames";
 import * as React from "react";
-import { authenticationService } from "../../app/user/authentication";
+// import { authenticationService } from "../../app/user/authentication";
 import {
   //Avatar,
   Button,
@@ -33,7 +33,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 // import { default as ShareIcon } from "@material-ui/icons/Share";
 
 // import { Counter } from '../counter/counter.container';
-
+// import AsyncApp from '../reddit/reddit.container';
 const styles = (theme: any) => ({
   // img: {
   //   height: 910,
@@ -225,7 +225,7 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
 
     return (
       <div>
-        {!authenticationService.isAuthenticated() && (
+        {/* {!authenticationService.isAuthenticated() && ( */}
           <Grid container={true} alignItems={"center"}>
             <Grid item={true} xs={12} sm={12}>
               <Typography variant="display3" align={"center"} color={"primary"}>
@@ -274,12 +274,13 @@ class Home extends React.Component<IMyComponentProps, IMyComponentState, any> {
             </Grid>
             <Grid item={true} xs={12} sm={4}>
               {/* ignored */}
+              {/* <AsyncApp /> */}
             </Grid>
             <Grid item={true} xs={12} sm={4}>
               {/* ignored */}
             </Grid>
           </Grid>
-        )}
+        {/* )} */}
       </div>
     );
   }

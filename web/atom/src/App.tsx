@@ -2,7 +2,7 @@ import * as redux from "redux";
 import About from "./components/about/about";
 import Home from "./components/home/home";
 import Profile from "./components/home/profile";
-import Login from "./components/login/login";
+import { default as Login } from "./components/login/login";
 import React from "react";
 import SignUp from "./components/signup/signup";
 import thunk from "redux-thunk";
@@ -12,7 +12,6 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { default as Navbar } from "./components/navigation/navbar";
 import { Provider } from "react-redux";
 import "./App.css";
-
 import reducers, * as state from "./app/counter/reducer";
 // import { default as NavigationBelow } from './components/navigation/navigation.below';
 
@@ -33,7 +32,7 @@ const NavBar = () => {
 export const App: React.SFC<{}> = _props => {
   return (
     <Provider store={store}>
-      <Router forceRefresh={true}>
+      <Router>
         <div>
           <NavBar />
           <Route exact path="/" component={Home} />

@@ -35,7 +35,7 @@ type Account struct {
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hello)
-	mux.HandleFunc("/login", login)
+	mux.HandleFunc("/auth/login", login)
 	mux.HandleFunc("/profile", account)
 
 	handler := cors.Default().Handler(mux)
@@ -89,7 +89,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.Write(json)
-		fmt.Println("got far son::", json)
+		fmt.Println("got far son::", tokenString)
 	} else {
 		http.Error(w, "Login failed!", http.StatusUnauthorized)
 	}
